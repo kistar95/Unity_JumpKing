@@ -24,6 +24,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -149,6 +150,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable: {}
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
@@ -159,6 +161,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 271664
   packageName: Pixel Heroes Megapack
-  packageVersion: 2.8
-  assetPath: Assets/Resource/PixelFantasy/PixelMonsters/Common/Images/ButtonG.png
-  uploadId: 656384
+  packageVersion: 3.1
+  assetPath: Assets/PixelFantasy/PixelMonsters/Common/Images/ButtonG.png
+  uploadId: 686458

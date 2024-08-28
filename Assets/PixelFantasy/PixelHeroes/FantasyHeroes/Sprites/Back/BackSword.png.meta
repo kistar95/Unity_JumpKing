@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1cc1da624f7144c8be9908328b729b29
+guid: 5e3086ab4f283fe43971c9395350924c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -1222,6 +1222,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 271664
   packageName: Pixel Heroes Megapack
-  packageVersion: 2.8
-  assetPath: Assets/Resource/PixelFantasy/PixelHeroes/FantasyHeroes/Sprites/Back/BackSword.png
-  uploadId: 656384
+  packageVersion: 3.1
+  assetPath: Assets/PixelFantasy/PixelHeroes/FantasyHeroes/Sprites/Back/BackSword.png
+  uploadId: 686458

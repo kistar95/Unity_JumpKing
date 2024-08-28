@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bd83a890ebe14735bb276e14e7e522b2
+guid: 6b41077dd8e19004c9add3883e408f2d
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -1351,6 +1351,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 271664
   packageName: Pixel Heroes Megapack
-  packageVersion: 2.8
-  assetPath: Assets/Resource/PixelFantasy/PixelHeroes/FantasyHeroes/Sprites/Back/LeatherQuiver.png
-  uploadId: 656384
+  packageVersion: 3.1
+  assetPath: Assets/PixelFantasy/PixelHeroes/FantasyHeroes/Sprites/Back/LeatherQuiver.png
+  uploadId: 686458

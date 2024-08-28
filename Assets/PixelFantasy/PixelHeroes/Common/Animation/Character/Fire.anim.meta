@@ -10,6 +10,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 271664
   packageName: Pixel Heroes Megapack
-  packageVersion: 2.8
-  assetPath: Assets/Resource/PixelFantasy/PixelHeroes/Common/Animation/Character/Fire.anim
-  uploadId: 656384
+  packageVersion: 3.1
+  assetPath: Assets/PixelFantasy/PixelHeroes/Common/Animation/Character/Fire.anim
+  uploadId: 686458

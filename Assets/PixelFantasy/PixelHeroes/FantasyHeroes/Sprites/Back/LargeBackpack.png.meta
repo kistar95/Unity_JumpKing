@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 79993ab3a27a43048750e4798e20e94e
+guid: b7bc0dc5b91480044b31d6f27161bbd1
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -1222,6 +1222,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 271664
   packageName: Pixel Heroes Megapack
-  packageVersion: 2.8
-  assetPath: Assets/Resource/PixelFantasy/PixelHeroes/FantasyHeroes/Sprites/Back/LargeBackpack.png
-  uploadId: 656384
+  packageVersion: 3.1
+  assetPath: Assets/PixelFantasy/PixelHeroes/FantasyHeroes/Sprites/Back/LargeBackpack.png
+  uploadId: 686458

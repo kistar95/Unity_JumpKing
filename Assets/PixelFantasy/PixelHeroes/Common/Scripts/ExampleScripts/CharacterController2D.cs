@@ -79,7 +79,10 @@ namespace Assets.PixelFantasy.PixelHeroes.Common.Scripts.ExampleScripts
                         }
                         else
                         {
-                            _animation.Ready();
+                            if (state != CharacterState.Idle)
+                            {
+                                _animation.Ready();
+                            }
                         }
                     }
                     else

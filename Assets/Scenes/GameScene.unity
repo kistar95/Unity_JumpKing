@@ -454,6 +454,7 @@ GameObject:
   - component: {fileID: 490117007}
   - component: {fileID: 490117006}
   - component: {fileID: 490117005}
+  - component: {fileID: 490117008}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -492,6 +493,8 @@ MonoBehaviour:
   Body: {fileID: 24140368}
   Animator: {fileID: 490117007}
   AudioSource: {fileID: 490117006}
+  _playerAnimation: {fileID: 0}
+  _playerMovement: {fileID: 0}
 --- !u!70 &490117005
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -648,6 +651,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &490117008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490117002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae897dbe79e8c8c4494457780b8ca1e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

@@ -121,8 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e56c8e188bacb84099d677f695a571d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FirearmAudioSource: {fileID: 7064084931199563689}
-  FireAudioClip: {fileID: 8300000, guid: a134bd44be3c26f438481884c3c47389, type: 3}
 --- !u!114 &7029579151857592459
 MonoBehaviour:
   m_ObjectHideFlags: 0
