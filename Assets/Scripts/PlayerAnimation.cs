@@ -4,14 +4,31 @@ using UnityEngine;
 using Assets.PixelFantasy.PixelHeroes.Common.Scripts.CharacterScripts;
 using System;
 using UnityEngine.TextCore.Text;
+using Assets.PixelFantasy.Common.Scripts;
 
 public class PlayerAnimation : MonoBehaviour
 {
     private PlayerMain _playerMain;
 
-    private void Start()
+    public void Initialize(PlayerMain inPlayerMain)
     {
-        _playerMain = GetComponent<PlayerMain>();
+        _playerMain = inPlayerMain;
+    }
+
+    public void Idle()
+    {
+        SetState(CharacterState.Idle);
+    }
+
+    public void Ready()
+    {
+        SetState(CharacterState.Ready);
+    }
+
+    public void Jump()
+    {
+        SetState(CharacterState.Jump);
+        EffectManager.Instance.CreateSpriteEffect(_playerMain, "Jump");
     }
 
     public void SetState(CharacterState inState)
@@ -37,5 +54,23 @@ public class PlayerAnimation : MonoBehaviour
             case CharacterState.Die: _playerMain.Animator.SetBool("Die", true); break;
             default: throw new NotSupportedException(inState.ToString());
         }
+    }
+
+    public CharacterState GetState()
+    {
+        if (_playerMain.Animator.GetBool("Idle")) return CharacterState.Idle;
+        if (_playerMain.Animator.GetBool("Ready")) return CharacterState.Ready;
+        if (_playerMain.Animator.GetBool("Walk")) return CharacterState.Walk;
+        if (_playerMain.Animator.GetBool("Run")) return CharacterState.Run;
+        if (_playerMain.Animator.GetBool("Crawl")) return CharacterState.Crawl;
+        if (_playerMain.Animator.GetBool("Crouch")) return CharacterState.Crouch;
+        if (_playerMain.Animator.GetBool("Jump")) return CharacterState.Jump;
+        if (_playerMain.Animator.GetBool("Fall")) return CharacterState.Fall;
+        if (_playerMain.Animator.GetBool("Land")) return CharacterState.Land;
+        if (_playerMain.Animator.GetBool("Block")) return CharacterState.Block;
+        if (_playerMain.Animator.GetBool("Climb")) return CharacterState.Climb;
+        if (_playerMain.Animator.GetBool("Die")) return CharacterState.Die;
+
+        return CharacterState.Ready;
     }
 }
