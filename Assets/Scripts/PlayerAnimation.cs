@@ -25,6 +25,26 @@ public class PlayerAnimation : MonoBehaviour
         SetState(CharacterState.Ready);
     }
 
+    public void Walk()
+    {
+        if (GetState() != CharacterState.Walk)
+        {
+            EffectManager.Instance.CreateSpriteEffect(_playerMain, "Walk");
+        }
+
+        SetState(CharacterState.Walk);
+    }
+
+    public void Run()
+    {
+        if (GetState() != CharacterState.Run)
+        {
+            EffectManager.Instance.CreateSpriteEffect(_playerMain, "Run");
+        }
+
+        SetState(CharacterState.Run);
+    }
+
     public void Jump()
     {
         SetState(CharacterState.Jump);
