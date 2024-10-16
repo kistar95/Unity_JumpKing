@@ -16,9 +16,6 @@ public class PlayerMain : Creature // 필요한가?
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _playerAnimation.Jump();
-        }
+        
     }
 }
