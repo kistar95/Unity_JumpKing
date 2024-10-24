@@ -10,8 +10,8 @@ public class PlayerMain : Creature // 필요한가?
 
     private void Start()
     {
-        _playerMovement.Initialize(_playerAnimation);
         _playerAnimation.Initialize(this);
+        _playerMovement.Initialize(_playerAnimation);
     }
 
     private void Update()
