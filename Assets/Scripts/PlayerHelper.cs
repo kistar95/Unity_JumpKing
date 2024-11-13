@@ -18,4 +18,9 @@ public class PlayerHelper : SingletonMonoBehaviour<PlayerHelper>
     /// 점프 딜레이
     /// </summary>
     public float JumpDelay = 0.2f;
+
+    /// <summary>
+    /// 최대 점프 차징 시간
+    /// </summary>
+    public float HoldTime = 2.0f;
 }

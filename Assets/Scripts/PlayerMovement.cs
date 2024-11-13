@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.U2D;
 
 public class PlayerMovement : MonoBehaviour
@@ -17,6 +19,16 @@ public class PlayerMovement : MonoBehaviour
     private EPlayerState _playerState = EPlayerState.IDLE;
 
     /// <summary>
+    /// 이동 액션
+    /// </summary>
+    private InputAction _moveAction;
+
+    /// <summary>
+    /// 점프 액션
+    /// </summary>
+    private InputAction _jumpAction;
+
+    /// <summary>
     /// 캐릭터가 땅에 닿았는지
     /// </summary>
     private bool _isGrounded;
@@ -27,19 +39,19 @@ public class PlayerMovement : MonoBehaviour
     private bool _isCharging;
 
     /// <summary>
+    /// 풀 차징 점프인지
+    /// </summary>
+    private bool _isChargeMax = false;
+
+    /// <summary>
+    /// 현재 점프력
+    /// </summary>
+    private float _currentJumpForce = 1.0f;
+
+    /// <summary>
     /// 좌, 우 방향
     /// </summary>
     private float _direction = 1.0f;
-
-    /// <summary>
-    /// 이동 액션
-    /// </summary>
-    private InputAction _moveAction;
-
-    /// <summary>
-    /// 점프 액션
-    /// </summary>
-    private InputAction _jumpAction;
 
     public void Initialize(PlayerAnimation inPlayerAnimation)
     {
@@ -54,9 +66,24 @@ public class PlayerMovement : MonoBehaviour
 
         _moveAction.performed += OnMove; // 눌렀을 때
         _moveAction.canceled += OnStop; // 땠을 때
+
+        _jumpAction.started += OnJumpReady;
+        _jumpAction.performed += OnJumpCharge;
+        _jumpAction.canceled += OnJump;
+
         // 임시
         _isGrounded = true;
         _isCharging = false;
+    }
+
+    private void OnDisable()
+    {
+        _moveAction.performed -= OnMove;
+        _moveAction.canceled -= OnStop;
+
+        _jumpAction.started -= OnJumpReady;
+        _jumpAction.performed -= OnJumpCharge;
+        _jumpAction.canceled -= OnJump;
     }
 
     private void FixedUpdate()
@@ -64,6 +91,16 @@ public class PlayerMovement : MonoBehaviour
         // 이동, 점프차징, 점프로 구성
         //Move();
     }
+
+    private void Update()
+    {
+        if (_isCharging == true)
+        {
+            _currentJumpForce += Time.deltaTime;
+        }
+    }
+
+    
 
     private void OnMove(InputAction.CallbackContext context)
     {
@@ -83,16 +120,60 @@ public class PlayerMovement : MonoBehaviour
         ChangeState(EPlayerState.IDLE);
     }
 
+    // 점프 로직
+    // started -> 점프 버튼 눌렀을 때(차징 시작)
+    // performed -> 점프 버튼을 누른 후 hold time이 지났을 때(풀차징 점프)
+    // canceled -> 점프 버튼을 누른 후 hold time이 지나기전에 버튼을 땠을 때(점프)
+
+    private void OnJumpReady(InputAction.CallbackContext context)
+    {
+        // 점프 준비(점프 버튼을 눌렀을 때) -> started
+        _isCharging = true;
+        Debug.Log("jump ready");
+
+
+        // 테스트용
+        
+    }
+
     private void OnJumpCharge(InputAction.CallbackContext context)
     {
+        // 풀차징 점프(hold time이 지났을 때) -> performed
+
         //_rigidbody.velocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
         //_playerAnimation.Jump();
-        Debug.Log("jump");
+
+        _rigidbody.velocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
+        ChangeState(EPlayerState.JUMP);
+        Debug.Log(_currentJumpForce);
+
+        _isChargeMax = true;
+        _isCharging = false;
+        _currentJumpForce = 1.0f;
+        Debug.Log("jump max");
     }
 
     private void OnJump(InputAction.CallbackContext context)
     {
+        // 점프(점프 버튼을 땠을 때) -> canceled
 
+        //_rigidbody.velocity = new Vector2(0, Mathf.Clamp(_currentJumpForce, 0.0f, PlayerHelper.Instance.JumpForce));
+        //_currentJumpForce = 0.0f;
+
+        if (_isChargeMax == true)
+        {
+            _isChargeMax = false;
+            return;
+        }
+
+        _rigidbody.velocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
+        ChangeState(EPlayerState.JUMP);
+        Debug.Log(_currentJumpForce);
+
+        _isCharging = false;
+        _currentJumpForce = 1.0f;
+        Debug.Log("jump");
+        
     }
 
     /// <summary>
@@ -118,6 +199,9 @@ public class PlayerMovement : MonoBehaviour
         if (collision.contacts[0].normal.y > 0.1f)
         {
             _isGrounded = true;
+            _rigidbody.velocity = Vector2.zero;
+            
+            ChangeState(EPlayerState.IDLE);
         }
     }
 
