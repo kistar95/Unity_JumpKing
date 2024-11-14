@@ -8,9 +8,9 @@ using UnityEngine.U2D;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // SpriteRenderer °¡ ÀÚ½Ä ¿ÀºêÁ§Æ®¿¡ ÀÖ±â¿¡ SerializeField »ç¿ë
+    // SpriteRenderer ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö±â¿¡ SerializeField ï¿½ï¿½ï¿½
     [SerializeField] private SpriteRenderer _sprite;
-    [SerializeField] private PlayerInput _playerInput; // SendMessages ¹æ½ÄÀº µÇµµ·Ï ¾²Áö¾Ê´ÂÆíÀÌ ÁÁ´Ù
+    [SerializeField] private PlayerInput _playerInput; // SendMessages ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private PlayerAnimation _playerAnimation;
     private Rigidbody2D _rigidbody;
@@ -19,37 +19,37 @@ public class PlayerMovement : MonoBehaviour
     private EPlayerState _playerState = EPlayerState.IDLE;
 
     /// <summary>
-    /// ÀÌµ¿ ¾×¼Ç
+    /// ï¿½Ìµï¿½ ï¿½×¼ï¿½
     /// </summary>
     private InputAction _moveAction;
 
     /// <summary>
-    /// Á¡ÇÁ ¾×¼Ç
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½×¼ï¿½
     /// </summary>
     private InputAction _jumpAction;
 
     /// <summary>
-    /// Ä³¸¯ÅÍ°¡ ¶¥¿¡ ´ê¾Ò´ÂÁö
+    /// Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ò´ï¿½ï¿½ï¿½
     /// </summary>
     private bool _isGrounded;
 
     /// <summary>
-    /// Á¡ÇÁ ÁØºñÁßÀÎÁö
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private bool _isCharging;
 
     /// <summary>
-    /// Ç® Â÷Â¡ Á¡ÇÁÀÎÁö
+    /// Ç® ï¿½ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private bool _isChargeMax = false;
 
     /// <summary>
-    /// ÇöÀç Á¡ÇÁ·Â
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private float _currentJumpForce = 1.0f;
 
     /// <summary>
-    /// ÁÂ, ¿ì ¹æÇâ
+    /// ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private float _direction = 1.0f;
 
@@ -64,14 +64,14 @@ public class PlayerMovement : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
 
-        _moveAction.performed += OnMove; // ´­·¶À» ¶§
-        _moveAction.canceled += OnStop; // ¶®À» ¶§
+        _moveAction.performed += OnMove; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        _moveAction.canceled += OnStop; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
         _jumpAction.started += OnJumpReady;
         _jumpAction.performed += OnJumpCharge;
         _jumpAction.canceled += OnJump;
 
-        // ÀÓ½Ã
+        // ï¿½Ó½ï¿½
         _isGrounded = true;
         _isCharging = false;
     }
@@ -88,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // ÀÌµ¿, Á¡ÇÁÂ÷Â¡, Á¡ÇÁ·Î ±¸¼º
+        // ï¿½Ìµï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¡, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //Move();
     }
 
@@ -108,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (input != null)
         {
-            _rigidbody.velocity = new Vector2(input.x * PlayerHelper.Instance.MoveSpeed, input.y);
+            _rigidbody.linearVelocity = new Vector2(input.x * PlayerHelper.Instance.MoveSpeed, input.y);
             ChangeState(EPlayerState.WALK);
             Turn(input.x);
         }
@@ -116,34 +116,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnStop(InputAction.CallbackContext context)
     {
-        _rigidbody.velocity = Vector2.zero;
+        _rigidbody.linearVelocity = Vector2.zero;
         ChangeState(EPlayerState.IDLE);
     }
 
-    // Á¡ÇÁ ·ÎÁ÷
-    // started -> Á¡ÇÁ ¹öÆ° ´­·¶À» ¶§(Â÷Â¡ ½ÃÀÛ)
-    // performed -> Á¡ÇÁ ¹öÆ°À» ´©¸¥ ÈÄ hold timeÀÌ Áö³µÀ» ¶§(Ç®Â÷Â¡ Á¡ÇÁ)
-    // canceled -> Á¡ÇÁ ¹öÆ°À» ´©¸¥ ÈÄ hold timeÀÌ Áö³ª±âÀü¿¡ ¹öÆ°À» ¶®À» ¶§(Á¡ÇÁ)
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // started -> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(ï¿½ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½)
+    // performed -> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ hold timeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Ç®ï¿½ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½)
+    // canceled -> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ hold timeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
 
     private void OnJumpReady(InputAction.CallbackContext context)
     {
-        // Á¡ÇÁ ÁØºñ(Á¡ÇÁ ¹öÆ°À» ´­·¶À» ¶§) -> started
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½) -> started
         _isCharging = true;
         Debug.Log("jump ready");
 
 
-        // Å×½ºÆ®¿ë
+        // ï¿½×½ï¿½Æ®ï¿½ï¿½
         
     }
 
     private void OnJumpCharge(InputAction.CallbackContext context)
     {
-        // Ç®Â÷Â¡ Á¡ÇÁ(hold timeÀÌ Áö³µÀ» ¶§) -> performed
+        // Ç®ï¿½ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½(hold timeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½) -> performed
 
         //_rigidbody.velocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
         //_playerAnimation.Jump();
 
-        _rigidbody.velocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
+        _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
         ChangeState(EPlayerState.JUMP);
         Debug.Log(_currentJumpForce);
 
@@ -155,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        // Á¡ÇÁ(Á¡ÇÁ ¹öÆ°À» ¶®À» ¶§) -> canceled
+        // ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½) -> canceled
 
         //_rigidbody.velocity = new Vector2(0, Mathf.Clamp(_currentJumpForce, 0.0f, PlayerHelper.Instance.JumpForce));
         //_currentJumpForce = 0.0f;
@@ -166,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        _rigidbody.velocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
+        _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
         ChangeState(EPlayerState.JUMP);
         Debug.Log(_currentJumpForce);
 
@@ -177,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// ¹æÇâ ÀüÈ¯
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     /// </summary>
     /// <param name="direction"></param>
     private void Turn(float inDirection)
@@ -199,7 +199,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.contacts[0].normal.y > 0.1f)
         {
             _isGrounded = true;
-            _rigidbody.velocity = Vector2.zero;
+            _rigidbody.linearVelocity = Vector2.zero;
             
             ChangeState(EPlayerState.IDLE);
         }
@@ -233,20 +233,20 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // ÁÂ, ¿ì ÀÔ·ÂÀÌ ¾øÀ» ½Ã
+        // ï¿½ï¿½, ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         if (Input.GetAxisRaw("Horizontal") == 0)
         {
-            _rigidbody.velocity = Vector2.zero; // Á¡ÇÁ¾ÈµÊ
+            _rigidbody.linearVelocity = Vector2.zero; // ï¿½ï¿½ï¿½ï¿½ï¿½Èµï¿½
             _playerAnimation.Idle();
             return;
         }
 
         float direction = Input.GetAxisRaw("Horizontal");
-        _rigidbody.velocity = new Vector2(direction * PlayerHelper.Instance.MoveSpeed, _rigidbody.velocity.y);
+        _rigidbody.linearVelocity = new Vector2(direction * PlayerHelper.Instance.MoveSpeed, _rigidbody.linearVelocity.y);
 
         if (Input.GetButton("Horizontal"))
         {
-            Turn(_rigidbody.velocity.x);
+            Turn(_rigidbody.linearVelocity.x);
         }
 
         if (direction != 0)
@@ -263,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButton("Jump"))
         {
-            _rigidbody.velocity = Vector2.zero;
+            _rigidbody.linearVelocity = Vector2.zero;
             _isCharging = true;
             _playerAnimation.Ready();
         }
@@ -275,7 +275,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButtonUp("Jump"))
         {
-            _rigidbody.velocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
+            _rigidbody.linearVelocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
             _playerAnimation.Jump();
         }
     }

@@ -35,7 +35,7 @@ namespace Assets.PixelFantasy.PixelMonsters.Common.Scripts.ExampleScripts
 
             if (state == MonsterState.Die) return;
             
-            var velocity = _rigidbody.velocity;
+            var velocity = _rigidbody.linearVelocity;
 
             if (Input.x == 0)
             {
@@ -90,7 +90,7 @@ namespace Assets.PixelFantasy.PixelMonsters.Common.Scripts.ExampleScripts
                 }
             }
 
-            _rigidbody.velocity = velocity;
+            _rigidbody.linearVelocity = velocity;
         }
 
         private void Turn(float direction)
