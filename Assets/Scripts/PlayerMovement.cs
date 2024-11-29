@@ -8,54 +8,56 @@ using UnityEngine.U2D;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // SpriteRenderer �� �ڽ� ������Ʈ�� �ֱ⿡ SerializeField ���
+    // SpriteRenderer 가 자식 오브젝트에 있기에 SerializeField 사용
     [SerializeField] private SpriteRenderer _sprite;
-    [SerializeField] private PlayerInput _playerInput; // SendMessages ����� �ǵ��� �����ʴ����� ����
+    [SerializeField] private PlayerInput _playerInput; // SendMessages 방식은 되도록 쓰지않는편이 좋다
 
     private PlayerAnimation _playerAnimation;
+    private PlayerPhysicsController _playerPhysicsController;
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
 
     private EPlayerState _playerState = EPlayerState.IDLE;
 
     /// <summary>
-    /// �̵� �׼�
+    /// 이동 액션
     /// </summary>
     private InputAction _moveAction;
 
     /// <summary>
-    /// ���� �׼�
+    /// 점프 액션
     /// </summary>
     private InputAction _jumpAction;
 
     /// <summary>
-    /// ĳ���Ͱ� ���� ��Ҵ���
+    /// 캐릭터가 땅에 닿았는지
     /// </summary>
     private bool _isGrounded;
 
     /// <summary>
-    /// ���� �غ�������
+    /// 점프 준비중인지
     /// </summary>
     private bool _isCharging;
 
     /// <summary>
-    /// Ǯ ��¡ ��������
+    /// 풀 차징 점프인지
     /// </summary>
     private bool _isChargeMax = false;
 
     /// <summary>
-    /// ���� ������
+    /// 현재 점프력
     /// </summary>
     private float _currentJumpForce = 1.0f;
 
     /// <summary>
-    /// ��, �� ����
+    /// 좌, 우 방향
     /// </summary>
     private float _direction = 1.0f;
 
-    public void Initialize(PlayerAnimation inPlayerAnimation)
+    public void Initialize(PlayerAnimation inPlayerAnimation, PlayerPhysicsController inPlayerPhysicsController)
     {
         _playerAnimation = inPlayerAnimation;
+        _playerPhysicsController = inPlayerPhysicsController;
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
 
@@ -64,14 +66,14 @@ public class PlayerMovement : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
         _jumpAction = _playerInput.actions["Jump"];
 
-        _moveAction.performed += OnMove; // ������ ��
-        _moveAction.canceled += OnStop; // ���� ��
+        _moveAction.performed += OnMove; // 눌렀을 때
+        _moveAction.canceled += OnStop; // 땠을 때
 
         _jumpAction.started += OnJumpReady;
         _jumpAction.performed += OnJumpCharge;
         _jumpAction.canceled += OnJump;
 
-        // �ӽ�
+        // 임시
         _isGrounded = true;
         _isCharging = false;
     }
@@ -88,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // �̵�, ������¡, ������ ����
+        // 이동, 점프차징, 점프로 구성
         //Move();
     }
 
@@ -104,6 +106,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
+        if (_isGrounded == false)
+        {
+            return;
+        }
+
         Vector2 input = context.ReadValue<Vector2>();
 
         if (input != null)
@@ -120,15 +127,17 @@ public class PlayerMovement : MonoBehaviour
         ChangeState(EPlayerState.IDLE);
     }
 
-    // ���� ����
-    // started -> ���� ��ư ������ ��(��¡ ����)
-    // performed -> ���� ��ư�� ���� �� hold time�� ������ ��(Ǯ��¡ ����)
-    // canceled -> ���� ��ư�� ���� �� hold time�� ���������� ��ư�� ���� ��(����)
+    // 점프 로직
+    // started -> 점프 버튼 눌렀을 때(차징 시작)
+    // performed -> 점프 버튼을 누른 후 hold time이 지났을 때(풀차징 점프)
+    // canceled -> 점프 버튼을 누른 후 hold time이 지나기전에 버튼을 땠을 때(점프)
 
     private void OnJumpReady(InputAction.CallbackContext context)
     {
-        // ���� �غ�(���� ��ư�� ������ ��) -> started
+        // 점프 준비(점프 버튼을 눌렀을 때) -> started
         _isCharging = true;
+        _isGrounded = false;
+        ChangeState(EPlayerState.CHARGE);
         Debug.Log("jump ready");
 
 
@@ -138,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnJumpCharge(InputAction.CallbackContext context)
     {
-        // Ǯ��¡ ����(hold time�� ������ ��) -> performed
+        // 풀차징 점프(hold time이 지났을 때) -> performed
 
         //_rigidbody.velocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
         //_playerAnimation.Jump();
@@ -155,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        // ����(���� ��ư�� ���� ��) -> canceled
+        // 점프(점프 버튼을 땠을 때) -> canceled
 
         //_rigidbody.velocity = new Vector2(0, Mathf.Clamp(_currentJumpForce, 0.0f, PlayerHelper.Instance.JumpForce));
         //_currentJumpForce = 0.0f;
@@ -177,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// ���� ��ȯ
+    /// 방향 전환
     /// </summary>
     /// <param name="direction"></param>
     private void Turn(float inDirection)
@@ -189,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
         _direction = scale.x;
     }
 
-    private IEnumerator JumpDelay()
+    private IEnumerator Co_JumpDelay()
     {
         yield return new WaitForSeconds(PlayerHelper.Instance.JumpDelay);
     }
@@ -233,7 +242,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // ��, �� �Է��� ���� ��
+        // 좌, 우 입력이 없을 시
         if (Input.GetAxisRaw("Horizontal") == 0)
         {
             _rigidbody.linearVelocity = Vector2.zero; // �����ȵ�

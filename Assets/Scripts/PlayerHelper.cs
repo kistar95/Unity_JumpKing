@@ -23,4 +23,9 @@ public class PlayerHelper : SingletonMonoBehaviour<PlayerHelper>
     /// 최대 점프 차징 시간
     /// </summary>
     public float HoldTime = 2.0f;
+
+    /// <summary>
+    /// 바닥 인지 길이
+    /// </summary>
+    public float GroundCheckLength = 0.2f;
 }
