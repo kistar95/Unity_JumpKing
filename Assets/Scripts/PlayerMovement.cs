@@ -52,8 +52,13 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// 좌, 우 방향
     /// </summary>
-    private float _direction = 1.0f;
+    private float _jumpDirection = 0;
 
+    /// <summary>
+    /// 초기화
+    /// </summary>
+    /// <param name="inPlayerAnimation"></param>
+    /// <param name="inPlayerPhysicsController"></param>
     public void Initialize(PlayerAnimation inPlayerAnimation, PlayerPhysicsController inPlayerPhysicsController)
     {
         _playerAnimation = inPlayerAnimation;
@@ -88,25 +93,24 @@ public class PlayerMovement : MonoBehaviour
         _jumpAction.canceled -= OnJump;
     }
 
-    private void FixedUpdate()
-    {
-        // 이동, 점프차징, 점프로 구성
-        //Move();
-    }
-
     private void Update()
     {
+        // 점프 차징
         if (_isCharging == true)
         {
             _currentJumpForce += Time.deltaTime;
         }
+
+        SetJumpDirection();
     }
 
-    
-
+    /// <summary>
+    /// 캐릭터 이동(좌,우 방향키 입력 시)
+    /// </summary>
+    /// <param name="context"></param>
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (_isGrounded == false)
+        if (_isGrounded == false || _isCharging == true)
         {
             return;
         }
@@ -121,6 +125,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 캐릭터 정지(좌, 우 방향키 눌렀다 땟을 때)
+    /// </summary>
+    /// <param name="context"></param>
     private void OnStop(InputAction.CallbackContext context)
     {
         _rigidbody.linearVelocity = Vector2.zero;
@@ -132,27 +140,25 @@ public class PlayerMovement : MonoBehaviour
     // performed -> 점프 버튼을 누른 후 hold time이 지났을 때(풀차징 점프)
     // canceled -> 점프 버튼을 누른 후 hold time이 지나기전에 버튼을 땠을 때(점프)
 
+    /// <summary>
+    /// 점프 준비(점프 버튼을 눌렀을 때) -> started
+    /// </summary>
+    /// <param name="context"></param>
     private void OnJumpReady(InputAction.CallbackContext context)
     {
-        // 점프 준비(점프 버튼을 눌렀을 때) -> started
         _isCharging = true;
         _isGrounded = false;
         ChangeState(EPlayerState.CHARGE);
         Debug.Log("jump ready");
-
-
-        // �׽�Ʈ��
-        
     }
 
+    /// <summary>
+    /// 풀차징 점프(hold time이 지났을 때) -> performed
+    /// </summary>
+    /// <param name="context"></param>
     private void OnJumpCharge(InputAction.CallbackContext context)
     {
-        // 풀차징 점프(hold time이 지났을 때) -> performed
-
-        //_rigidbody.velocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
-        //_playerAnimation.Jump();
-
-        _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
+        _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _jumpDirection / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
         ChangeState(EPlayerState.JUMP);
         Debug.Log(_currentJumpForce);
 
@@ -162,20 +168,19 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("jump max");
     }
 
+    /// <summary>
+    /// 점프(점프 버튼을 땠을 때) -> canceled
+    /// </summary>
+    /// <param name="context"></param>
     private void OnJump(InputAction.CallbackContext context)
     {
-        // 점프(점프 버튼을 땠을 때) -> canceled
-
-        //_rigidbody.velocity = new Vector2(0, Mathf.Clamp(_currentJumpForce, 0.0f, PlayerHelper.Instance.JumpForce));
-        //_currentJumpForce = 0.0f;
-
         if (_isChargeMax == true)
         {
             _isChargeMax = false;
             return;
         }
 
-        _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _direction / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
+        _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _jumpDirection / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
         ChangeState(EPlayerState.JUMP);
         Debug.Log(_currentJumpForce);
 
@@ -183,6 +188,21 @@ public class PlayerMovement : MonoBehaviour
         _currentJumpForce = 1.0f;
         Debug.Log("jump");
         
+    }
+
+    /// <summary>
+    /// 점프 이동방향 결정
+    /// </summary>
+    private void SetJumpDirection()
+    {
+        if (_isCharging == false)
+        {
+            return;
+        }
+
+        float _direction = Input.GetAxisRaw("Horizontal");
+
+        _jumpDirection = _direction;
     }
 
     /// <summary>
@@ -195,7 +215,7 @@ public class PlayerMovement : MonoBehaviour
         scale.x = Mathf.Sign(inDirection) * Mathf.Abs(scale.x);
         transform.localScale = scale;
 
-        _direction = scale.x;
+        //_direction = scale.x;
     }
 
     private IEnumerator Co_JumpDelay()

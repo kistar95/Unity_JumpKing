@@ -69,7 +69,6 @@ public class PlayerPhysicsController : MonoBehaviour
 
             yield return null;
         }
-        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
