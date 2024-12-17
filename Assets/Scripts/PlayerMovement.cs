@@ -32,12 +32,12 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// 캐릭터가 땅에 닿았는지
     /// </summary>
-    private bool _isGrounded;
+    private bool _isGrounded = false;
 
     /// <summary>
     /// 점프 준비중인지
     /// </summary>
-    private bool _isCharging;
+    private bool _isCharging = false;
 
     /// <summary>
     /// 풀 차징 점프인지
@@ -79,8 +79,8 @@ public class PlayerMovement : MonoBehaviour
         _jumpAction.canceled += OnJump;
 
         // 임시
-        _isGrounded = true;
-        _isCharging = false;
+        //_isGrounded = true;
+        //_isCharging = false;
     }
 
     private void OnDisable()
@@ -131,6 +131,11 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="context"></param>
     private void OnStop(InputAction.CallbackContext context)
     {
+        if (_isGrounded == false || _isCharging == true)
+        {
+            return;
+        }
+
         _rigidbody.linearVelocity = Vector2.zero;
         ChangeState(EPlayerState.IDLE);
     }
@@ -146,8 +151,8 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="context"></param>
     private void OnJumpReady(InputAction.CallbackContext context)
     {
+        _rigidbody.linearVelocity = Vector2.zero;
         _isCharging = true;
-        _isGrounded = false;
         ChangeState(EPlayerState.CHARGE);
         Debug.Log("jump ready");
     }
@@ -164,6 +169,7 @@ public class PlayerMovement : MonoBehaviour
 
         _isChargeMax = true;
         _isCharging = false;
+        _isGrounded = false;
         _currentJumpForce = 1.0f;
         Debug.Log("jump max");
     }
@@ -185,6 +191,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log(_currentJumpForce);
 
         _isCharging = false;
+        _isGrounded = false;
         _currentJumpForce = 1.0f;
         Debug.Log("jump");
         
@@ -203,6 +210,7 @@ public class PlayerMovement : MonoBehaviour
         float _direction = Input.GetAxisRaw("Horizontal");
 
         _jumpDirection = _direction;
+        Turn(_direction);
     }
 
     /// <summary>
@@ -255,59 +263,59 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Move()
-    {
-        if (_isGrounded == false || _isCharging == true)
-        {
-            return;
-        }
+    //private void Move()
+    //{
+    //    if (_isGrounded == false || _isCharging == true)
+    //    {
+    //        return;
+    //    }
 
-        // 좌, 우 입력이 없을 시
-        if (Input.GetAxisRaw("Horizontal") == 0)
-        {
-            _rigidbody.linearVelocity = Vector2.zero; // �����ȵ�
-            _playerAnimation.Idle();
-            return;
-        }
+    //    // 좌, 우 입력이 없을 시
+    //    if (Input.GetAxisRaw("Horizontal") == 0)
+    //    {
+    //        _rigidbody.linearVelocity = Vector2.zero; // �����ȵ�
+    //        _playerAnimation.Idle();
+    //        return;
+    //    }
 
-        float direction = Input.GetAxisRaw("Horizontal");
-        _rigidbody.linearVelocity = new Vector2(direction * PlayerHelper.Instance.MoveSpeed, _rigidbody.linearVelocity.y);
+    //    float direction = Input.GetAxisRaw("Horizontal");
+    //    _rigidbody.linearVelocity = new Vector2(direction * PlayerHelper.Instance.MoveSpeed, _rigidbody.linearVelocity.y);
 
-        if (Input.GetButton("Horizontal"))
-        {
-            Turn(_rigidbody.linearVelocity.x);
-        }
+    //    if (Input.GetButton("Horizontal"))
+    //    {
+    //        Turn(_rigidbody.linearVelocity.x);
+    //    }
 
-        if (direction != 0)
-        {
-            _playerAnimation.Run();
-        }
-        else
-        {
-            _playerAnimation.Idle();
-        }
-    }
+    //    if (direction != 0)
+    //    {
+    //        _playerAnimation.Run();
+    //    }
+    //    else
+    //    {
+    //        _playerAnimation.Idle();
+    //    }
+    //}
 
-    private void JumpCharging()
-    {
-        if (Input.GetButton("Jump"))
-        {
-            _rigidbody.linearVelocity = Vector2.zero;
-            _isCharging = true;
-            _playerAnimation.Ready();
-        }
+    //private void JumpCharging()
+    //{
+    //    if (Input.GetButton("Jump"))
+    //    {
+    //        _rigidbody.linearVelocity = Vector2.zero;
+    //        _isCharging = true;
+    //        _playerAnimation.Ready();
+    //    }
 
-        Jump();
-    }
+    //    Jump();
+    //}
 
-    private void Jump()
-    {
-        if (Input.GetButtonUp("Jump"))
-        {
-            _rigidbody.linearVelocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
-            _playerAnimation.Jump();
-        }
-    }
+    //private void Jump()
+    //{
+    //    if (Input.GetButtonUp("Jump"))
+    //    {
+    //        _rigidbody.linearVelocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
+    //        _playerAnimation.Jump();
+    //    }
+    //}
 
     
 }
