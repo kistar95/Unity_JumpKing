@@ -5,9 +5,25 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform _playerTransform;
 
     private Camera _mainCamera;
+
+    /// <summary>
+    /// 카메라 세로 크기
+    /// </summary>
     private float _cameraHeight;
+
+    /// <summary>
+    /// 카메라 가로 크기
+    /// </summary>
     private float _cameraWidth;
+
+    /// <summary>
+    /// 카메라의 현재 위치
+    /// </summary>
     private Vector2 _currentCameraPos;
+
+    /// <summary>
+    /// 카메라의 현재 칸
+    /// </summary>
     private Vector2 _currentCell;
 
     private void Awake()
