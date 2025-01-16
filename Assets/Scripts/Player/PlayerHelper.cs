@@ -12,7 +12,7 @@ public class PlayerHelper : SingletonMonoBehaviour<PlayerHelper>
     /// <summary>
     /// 점프력
     /// </summary>
-    public float JumpForce = 7;
+    public float JumpForce = 8;
 
     /// <summary>
     /// 점프 딜레이

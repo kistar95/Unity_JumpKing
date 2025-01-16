@@ -7,5 +7,6 @@ public enum EPlayerState
     IDLE,
     WALK,
     CHARGE,
-    JUMP
+    JUMP,
+    FALL
 }

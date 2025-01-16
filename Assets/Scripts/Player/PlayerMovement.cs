@@ -100,6 +100,11 @@ public class PlayerMovement : MonoBehaviour
         {
             _currentJumpForce += Time.deltaTime;
         }
+        // 바닥 체크(낙하 상황 등), IsGrounded가 false 가되면 ChangeState
+        if (_playerPhysicsController.IsGrounded == false)
+        {
+            ChangeState(EPlayerState.FALL);
+        }
 
         SetJumpDirection();
     }
@@ -110,10 +115,14 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="context"></param>
     private void OnMove(InputAction.CallbackContext context)
     {
-        if (_isGrounded == false || _isCharging == true)
+        if (_playerPhysicsController.IsGrounded == false || _isCharging == true)
         {
             return;
         }
+        //if (_isGrounded == false || _isCharging == true)
+        //{
+        //    return;
+        //}
 
         Vector2 input = context.ReadValue<Vector2>();
 
@@ -131,10 +140,14 @@ public class PlayerMovement : MonoBehaviour
     /// <param name="context"></param>
     private void OnStop(InputAction.CallbackContext context)
     {
-        if (_isGrounded == false || _isCharging == true)
+        if (_playerPhysicsController.IsGrounded == false || _isCharging == true)
         {
             return;
         }
+        //if (_isGrounded == false || _isCharging == true)
+        //{
+        //    return;
+        //}
 
         _rigidbody.linearVelocity = Vector2.zero;
         ChangeState(EPlayerState.IDLE);
@@ -165,13 +178,14 @@ public class PlayerMovement : MonoBehaviour
     {
         _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _jumpDirection / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
         ChangeState(EPlayerState.JUMP);
-        Debug.Log(_currentJumpForce);
+        //Debug.Log(_currentJumpForce);
 
         _isChargeMax = true;
         _isCharging = false;
-        _isGrounded = false;
+        _isGrounded = false; // 나중에 삭제
+        //_playerPhysicsController.IsGrounded = false;
         _currentJumpForce = 1.0f;
-        Debug.Log("jump max");
+        //Debug.Log("jump max");
     }
 
     /// <summary>
@@ -188,13 +202,13 @@ public class PlayerMovement : MonoBehaviour
 
         _rigidbody.linearVelocity = new Vector2(PlayerHelper.Instance.JumpForce * _currentJumpForce * _jumpDirection / 2, PlayerHelper.Instance.JumpForce * _currentJumpForce);
         ChangeState(EPlayerState.JUMP);
-        Debug.Log(_currentJumpForce);
+        //Debug.Log(_currentJumpForce);
 
         _isCharging = false;
-        _isGrounded = false;
+        _isGrounded = false; // 나중에 삭제
+        //_playerPhysicsController.IsGrounded = false;
         _currentJumpForce = 1.0f;
-        Debug.Log("jump");
-        
+        //Debug.Log("jump");
     }
 
     /// <summary>
@@ -231,19 +245,13 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(PlayerHelper.Instance.JumpDelay);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.contacts[0].normal.y > 0.1f)
-        {
-            _isGrounded = true;
-            _rigidbody.linearVelocity = Vector2.zero;
-            
-            ChangeState(EPlayerState.IDLE);
-        }
-    }
-
     private void ChangeState(EPlayerState inState)
     {
+        if (_playerState == inState)
+        {
+            return;
+        }
+
         _playerState = inState;
 
         switch (_playerState)
@@ -260,62 +268,22 @@ public class PlayerMovement : MonoBehaviour
             case EPlayerState.JUMP:
                 _playerAnimation.Jump();
                 break;
+            case EPlayerState.FALL:
+                _playerAnimation.Fall();
+                break;
         }
     }
 
-    //private void Move()
-    //{
-    //    if (_isGrounded == false || _isCharging == true)
-    //    {
-    //        return;
-    //    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Vector2 _normal = collision.contacts[0].normal;
 
-    //    // 좌, 우 입력이 없을 시
-    //    if (Input.GetAxisRaw("Horizontal") == 0)
-    //    {
-    //        _rigidbody.linearVelocity = Vector2.zero; // �����ȵ�
-    //        _playerAnimation.Idle();
-    //        return;
-    //    }
+        if (_normal.y > 0.1f)
+        {
+            _isGrounded = true; // 나중에 삭제
+            _rigidbody.linearVelocity = Vector2.zero;
 
-    //    float direction = Input.GetAxisRaw("Horizontal");
-    //    _rigidbody.linearVelocity = new Vector2(direction * PlayerHelper.Instance.MoveSpeed, _rigidbody.linearVelocity.y);
-
-    //    if (Input.GetButton("Horizontal"))
-    //    {
-    //        Turn(_rigidbody.linearVelocity.x);
-    //    }
-
-    //    if (direction != 0)
-    //    {
-    //        _playerAnimation.Run();
-    //    }
-    //    else
-    //    {
-    //        _playerAnimation.Idle();
-    //    }
-    //}
-
-    //private void JumpCharging()
-    //{
-    //    if (Input.GetButton("Jump"))
-    //    {
-    //        _rigidbody.linearVelocity = Vector2.zero;
-    //        _isCharging = true;
-    //        _playerAnimation.Ready();
-    //    }
-
-    //    Jump();
-    //}
-
-    //private void Jump()
-    //{
-    //    if (Input.GetButtonUp("Jump"))
-    //    {
-    //        _rigidbody.linearVelocity = new Vector2(0, PlayerHelper.Instance.JumpForce);
-    //        _playerAnimation.Jump();
-    //    }
-    //}
-
-    
+            ChangeState(EPlayerState.IDLE);
+        }
+    }
 }

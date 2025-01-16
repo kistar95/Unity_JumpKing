@@ -51,6 +51,11 @@ public class PlayerAnimation : MonoBehaviour
         EffectManager.Instance.CreateSpriteEffect(_playerMain, "Jump");
     }
 
+    public void Fall()
+    {
+        SetState(CharacterState.Jump);
+    }
+
     public void SetState(CharacterState inState)
     {
         foreach (var variable in new[] { "Idle", "Ready", "Walk", "Run", "Crouch", "Crawl", "Jump", "Fall", "Land", "Block", "Climb", "Die" })
