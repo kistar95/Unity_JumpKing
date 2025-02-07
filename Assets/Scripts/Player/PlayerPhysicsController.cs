@@ -59,23 +59,6 @@ public class PlayerPhysicsController : MonoBehaviour
         return hit.collider != null;
     }
 
-    //private IEnumerator Co_CheckGround()
-    //{
-    //    while (true)
-    //    {
-    //        if (CheckGround() == true)
-    //        {
-    //            SetPhysicsMaterial(_normalMaterial);
-    //        }
-    //        else
-    //        {
-    //            SetPhysicsMaterial(_bounceMaterial);
-    //        }
-
-    //        yield return null;
-    //    }
-    //}
-
     private void UpdatePhysicsMaterial()
     {
         if (CheckGround() == true)
